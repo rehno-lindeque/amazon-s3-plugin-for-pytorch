@@ -43,10 +43,13 @@ class CMakeBuild(build_ext):
                 raise RuntimeError("CMake >= 3.1.0 is required on Windows")
 
         for ext in self.extensions:
+            print("!!!!!!!!!!!!!!!", ext)
             self.build_extension(ext)
 
     def build_extension(self, ext):
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
+        print("!!!!!!!!!!", "extdir", extdir)
+
         # required for auto-detection of auxiliary "native" libs
         if not extdir.endswith(os.path.sep):
             extdir += os.path.sep
@@ -73,8 +76,35 @@ class CMakeBuild(build_ext):
                                                               self.distribution.get_version())
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
-        subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
-        subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd=self.build_temp)
+
+        print("\n\n\n\n\n\n\n\n\n\n ==================================================== \n\n\n\n\n\n\n\n")
+        print('cmake_args', cmake_args)
+        print('ext.sourcedir', ext.sourcedir)
+        print(f"ls {ext.sourcedir}")
+        subprocess.run(["ls",ext.sourcedir])
+
+        print("\n\n\n\n")
+        print(f"ls {self.build_temp}")
+        subprocess.run(["ls", self.build_temp])
+
+        # print("\n\n\n\n")
+        # print(f"env", env)
+
+        print("\n\n\n\n\n\n\n\n\n\n ==================================================== \n\n\n\n\n\n\n\n")
+        # subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
+        subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, env=env)
+        print("\n\n\n\n\n\n\n\n\n\n ==================================================== \n\n\n\n\n\n\n\n")
+        print('build_args', build_args)
+        print("ls .")
+        subprocess.run(["ls","."])
+
+        print("\n\n\n\n")
+        print(f"ls {self.build_temp}")
+        subprocess.run(["ls", self.build_temp])
+
+        print("\n\n\n\n\n\n\n\n\n\n ==================================================== \n\n\n\n\n\n\n\n")
+        # subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd=self.build_temp)
+        subprocess.check_call(['cmake', '--build', '.'] + build_args)
 
 
 def get_sha():
